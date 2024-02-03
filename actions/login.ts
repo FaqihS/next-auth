@@ -8,7 +8,7 @@ export async function login (values: TLoginSchema){
   
   const validatedFields = LoginSchema.safeParse(values)
 
-  if(!validatedFields){
+  if(!validatedFields.success){
     return {error: "Invalid fields"}
   }
 
