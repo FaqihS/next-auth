@@ -4,7 +4,7 @@ import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
 import { RegisterSchema, TRegisterSchema } from "@/schemas";
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 
 
@@ -21,17 +21,19 @@ export async function register (values: TRegisterSchema){
 
   const hashedPassword = await bcrypt.hash(password,10)
 
-  const existingUser = await db.user.findUnique({
-    where: {
-      email,
-    }
-  });
-
+  const existingUser = await getUserByEmail(email);
   if(existingUser) {
     return { error: "Email already registered"}
   }
 
-  const newUser = await getUserByEmail(email);
+  const newUser = await db.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+    }
+
+  })
 
   if(!newUser){
     return { error: "Failed to Register, try again later"}
