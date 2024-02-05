@@ -6,7 +6,7 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      {JSON.stringify(session?.user.id)}
+      {JSON.stringify(session?.user)}
 
       <form
         action={async () => {
