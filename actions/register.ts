@@ -2,6 +2,8 @@
 
 import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
+import { sendVerificationEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/lib/tokens";
 import { RegisterSchema, TRegisterSchema } from "@/schemas";
 
 import bcrypt from "bcryptjs";
@@ -39,7 +41,9 @@ export async function register (values: TRegisterSchema){
     return { error: "Failed to Register, try again later"}
   }
 
-  // TODO: Email Verification 
+  const verificationToken= await generateVerificationToken(email)
 
-  return {success: "User Created"}
+  await sendVerificationEmail(verificationToken.email,verificationToken.token);
+
+  return {success: "Confirmation email sent!"}
 }
